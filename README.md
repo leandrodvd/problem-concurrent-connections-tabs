@@ -30,4 +30,4 @@ Some of our existing developers will be given your solution to review. Correctne
 
 # Solution
 
-The solution for the problem is inside the solutions directory. Read solution/solution.md for an overview of the solution
+The solution for the problem is inside the solutions directory. Read solution/README.md for an overview of the solution
