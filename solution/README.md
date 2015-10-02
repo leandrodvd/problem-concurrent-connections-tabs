@@ -17,4 +17,4 @@
 15. Files test_persistent_conn_mock.html and test_persistent_conn_proxy.html proves that the only thing necessary to solve the original problem is to replace the PersistentConn with PersistenConnProxy in a single line of code
 16. Files test_persistent_conn_mock.html and test_persistent_conn_proxy.html can be used to test the solution by creating channels and bindings with the HTML interface on it
 
-![alt tag](ldavid.png) 
+![alt tag](solution_draw.png) 
