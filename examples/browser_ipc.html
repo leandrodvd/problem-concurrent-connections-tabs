@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Runrun.it Coding Test</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body>
+    <h1>My status: <span id="am-master"></span></h1>
+	<div>
+      <button onclick="openBus()">OpenBus</button>
+    </div>
+    <div>
+      Send a message: <input type="text" id="message-text" ></input><button onclick='bus.broadcast("foo", {"text": document.getElementById("message-text").value });'>Send</button>
+    </div>
+    <h2>Received Message Log</h2>
+    <ul id="message-log">
+    </ul>
+    <script src="../src/browser_ipc.js"></script>
+    <script>
+      
+      var showMasterStatus = function() {
+        var masterStatus = document.getElementById("am-master");
+        masterStatus.innerHTML = "isMaster:"+bus.isMaster;
+      };
+
+	  var openBus = function(){
+		console.log("bus before create:"+window.bus);
+		window.bus = new BrowserIpc();
+		console.log("bus after create:"+window.bus);
+		bus.on("masterDidChange", showMasterStatus);
+		showMasterStatus();
+
+      var log = document.getElementById("message-log");
+      bus.on("foo", function(msg) {
+	  console.log("received:"+JSON.stringify(msg));
+        var item = document.createElement("li");
+        item.innerHTML = "message:" + msg+ " "+JSON.stringify(msg);
+        log.appendChild( item );
+			showMasterStatus();
+
+     });
+		};
+
+	  
+      
+    </script>
+  </body>
+</html>

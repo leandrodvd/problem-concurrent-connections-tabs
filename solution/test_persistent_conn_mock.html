@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Runrun.it Coding Test - Test the mock of PersistentConn</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body>
+	<h1>This Page uses PersistentConnProxy</h1>
+	<div>
+      App Key: <input type="text" id="app-key" ></input><button onclick='openConnection(document.getElementById("app-key").value);'>Open Connection</button>
+	   <br>
+      Channel Name: <input type="text" id="channel-name" ></input>
+	  <button onclick='subscribe(document.getElementById("channel-name").value );'>Subscribe</button>
+	  <button onclick='unsubscribe(document.getElementById("channel-name").value );'>Unsubscribe</button>
+	  <br>
+	  Event Name: <input type="text" id="event-name" ></input>
+	  <button onclick='bind(document.getElementById("channel-name").value, document.getElementById("event-name").value);'>Bind</button>
+	  <button onclick='unbind(document.getElementById("channel-name").value, document.getElementById("event-name").value);'>Unbind</button>
+	  <br>
+	  <button onclick='bindAll(document.getElementById("channel-name").value);'>BindAll</button>
+	  <button onclick='unbindAll(document.getElementById("channel-name").value);'>UnbindAll</button>
+    </div>
+	<div>
+      <button onclick='serverConn.disconnect()'>Disconnect</button>
+    </div>
+	<h2>I'm Master:<span id="am-master"></span></h2>
+	<h2>Received channel data</h2>
+	<ul id="received-data"></ul>
+  
+  
+	<script src="evemit.js"></script>
+    <script src="persistent_conn_mock.js"></script>
+
+	
+
+    <script>
+		var serverConn = {};
+		var channels ={};
+		var bindFunction=function(data){
+				console.log(" Received data:"+JSON.stringify(data))
+				var li = document.createElement("li");
+				li.innerHTML=JSON.stringify(data)
+				
+				document.getElementById("received-data").appendChild(li);
+				
+		};
+		var bindAllFunction=function(data){
+				console.log("[bindall] Received data:"+JSON.stringify(data))
+				var li = document.createElement("li");
+				li.innerHTML=JSON.stringify(data)+"[bindAll]"
+				
+				document.getElementById("received-data").appendChild(li);
+		};
+		function openConnection(appkey){
+			console.log("OpenConnection "+appkey);
+			serverConn = new PersistentConn(appkey);
+			//set a listener to track masterDidChange
+		//	window.bus.on("masterDidChange",function(payload){
+			//	document.getElementById("am-master").innerHTML=window.bus.isMaster;
+		//	});
+		}
+		function subscribe(channelName){
+			console.log("subscribe channel "+channelName);
+			var newChannel = serverConn.subscribe(channelName)
+			channels[channelName]=newChannel;
+		}
+		function unsubscribe(channelName){
+			console.log("unsubscribe channel "+channelName);
+			serverConn.unsubscribe(channelName)
+			channels[channelName]=null;
+		}
+		function bind(channelName,eventName){
+			console.log("bind channel "+channelName+ " event "+eventName);
+			if(channels[channelName]!=null){
+				channels[channelName].bind(eventName,bindFunction);
+			}
+		}
+		function unbind(channelName,eventName){
+		console.log("unbind channel "+channelName+ " event "+eventName);
+			if(channels[channelName]!=null){
+				channels[channelName].unbind(eventName,bindFunction);
+			}
+		}
+		function bindAll(channelName){
+		console.log("bind_all channel "+channelName);
+			if(channels[channelName]!=null){
+				channels[channelName].bind_all(bindAllFunction);
+			}
+		}
+		function unbindAll(channelName){
+		console.log("unbind_all channel "+channelName);
+			if(channels[channelName]!=null){
+				channels[channelName].unbind_all(bindAllFunction);
+			}
+		}
+	    
+    </script>
+  </body>
+</html>
