@@ -17,4 +17,7 @@
 15. Files test_persistent_conn_mock.html and test_persistent_conn_proxy.html proves that the only thing necessary to solve the original problem is to replace the PersistentConn with PersistenConnProxy in a single line of code
 16. Files test_persistent_conn_mock.html and test_persistent_conn_proxy.html can be used to test the solution by creating channels and bindings with the HTML interface on it
 
+The following image gives an idea of what the solution does. Tabs like Tab 1 are not MASTER and thus doesn't contain PersistentConn and Channel objects, only PersistenConnProxy and ChannelProxy.
+At any given moment there is only one tab like Tab 2, that is a MASTER tab and contais one PersistentConn object and Channel objects.
+When a new tab becomes MASTER, the ConnectionState (self.conn) object is used to recreate the single PersistentConn and all required Channel objects in the new Master tab
 ![alt tag](solution_draw.png) 
